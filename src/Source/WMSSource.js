@@ -1,5 +1,8 @@
 import Source from 'Source/Source';
 import URLBuilder from 'Provider/URLBuilder';
+import Extent from 'Core/Geographic/Extent';
+
+const _extent = new Extent('EPSG:4326', [0, 0, 0, 0]);
 
 /**
  * An object defining the source of images to get from a
@@ -135,7 +138,10 @@ class WMSSource extends Source {
         }
     }
 
-    urlFromExtent(extent) {
+    urlFromExtent(extentOrTile) {
+        const extent = extentOrTile.isExtent ?
+            extentOrTile.as(this.crs, _extent) :
+            extentOrTile.toExtent(this.crs, _extent);
         return URLBuilder.bbox(extent, this);
     }
 
