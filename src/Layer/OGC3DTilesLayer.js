@@ -140,10 +140,12 @@ class OGC3DTilesLayer extends GeometryLayer {
             this.tilesRenderer.registerPlugin(new CesiumIonAuthPlugin({
                 apiToken: config.source.accessToken,
                 assetId: config.source.assetId,
+                autoRefreshToken: true,
             }));
         } else if (config.source.isOGC3DTilesGoogleSource) {
             this.tilesRenderer.registerPlugin(new GoogleCloudAuthPlugin({
                 apiToken: config.source.key,
+                autoRefreshToken: true,
             }));
         }
         this.tilesRenderer.registerPlugin(new ImplicitTilingPlugin());
@@ -292,7 +294,7 @@ class OGC3DTilesLayer extends GeometryLayer {
 
         // Setup classification bufferAttribute
         if (model.isPoints) {
-            const classificationData = batchTable?.getData('Classification');
+            const classificationData = batchTable?.getPropertyArray('Classification');
             if (classificationData) {
                 geometry.setAttribute('classification',
                     new THREE.BufferAttribute(classificationData, 1),
