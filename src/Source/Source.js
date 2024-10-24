@@ -22,7 +22,7 @@ export const supportedParsers = new Map([
     ['application/gdf', GDFParser.parse],
 ]);
 
-const noCache = { getByArray: () => { }, setByArray: a => a, clear: () => { } };
+const noCache = { get: () => {}, set: a => a, clear: () => {} };
 
 /**
  * @property {string} crs - data crs projection.
@@ -148,7 +148,7 @@ class Source extends InformationsData {
         throw new Error('In extended Source, you have to implement the method urlFromExtent!');
     }
 
-    requestToKey(extent) {
+    keysFromExtent(extent) {
         return [extent.zoom, extent.row, extent.col];
     }
 
@@ -162,16 +162,16 @@ class Source extends InformationsData {
      */
     loadData(extent, out) {
         const cache = this._featuresCaches[out.crs];
-        const key = this.requestToKey(extent);
+        const key = this.keysFromExtent(extent);
         // try to get parsed data from cache
-        let features = cache.getByArray(key);
+        let features = cache.get(...key);
         if (!features) {
             // otherwise fetch/parse the data
-            features = cache.setByArray(
+            features = cache.set(
                 this.fetcher(this.urlFromExtent(extent), this.networkOptions)
                     .then(file => this.parser(file, { out, in: this, extent }))
                     .catch(err => this.handlingError(err)),
-                key);
+                ...key);
 
             if (this.onParsedFile) {
                 features.then((feat) => {

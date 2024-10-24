@@ -79,13 +79,13 @@ describe('Sources', function () {
 
         it('should return keys from request', function () {
             const source = new WFSSource(paramsWFS);
-            const tile = new Tile('EPSG:4326', 5, 10, 15);
-            const keys = source.requestToKey(tile);
+            const tile = new Tile('TMS:4326', 5, 10, 15);
+            const keys = source.keysFromExtent(tile);
             assert.equal(tile.zoom, keys[0]);
             assert.equal(tile.row, keys[1]);
             assert.equal(tile.col, keys[2]);
             const extentepsg = new Extent('EPSG:4326', 5.5, 10, 22.3, 89.34);
-            const keysepsg = source.requestToKey(extentepsg);
+            const keysepsg = source.keysFromExtent(extentepsg);
             assert.equal(extentepsg.south, keysepsg[1]);
             assert.equal(extentepsg.west, keysepsg[2]);
         });
@@ -185,7 +185,7 @@ describe('Sources', function () {
         it('should return keys OrientedImageSource from request', function () {
             const source = new OrientedImageSource({ url: 'http://source.test' });
             const image = { cameraId: 5, panoId: 10 };
-            const keys = source.requestToKey(image);
+            const keys = source.keysFromExtent(image);
             assert.equal(image.cameraId, keys[0]);
             assert.equal(image.panoId, keys[1]);
         });
