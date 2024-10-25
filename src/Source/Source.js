@@ -25,28 +25,6 @@ export const supportedParsers = new Map([
 const noCache = { get: () => {}, set: a => a, clear: () => {} };
 
 /**
- * @property {string} crs - data crs projection.
- * @property {boolean} isInverted - This option is to be set to the
- * correct value, true or false (default being false), if the computation of
- * the coordinates needs to be inverted to same scheme as OSM, Google Maps
- * or other system. See [this link](
- * https://alastaira.wordpress.com/2011/07/06/converting-tms-tile-coordinates-to-googlebingosm-tile-coordinates)
- * for more informations.
- *
- */
-class InformationsData {
-    constructor(options) {
-        if (options.projection) {
-            console.warn('Source projection parameter is deprecated, use crs instead.');
-            options.crs = options.crs || options.projection;
-        }
-        if (options.crs) {
-            CRS.isValid(options.crs);
-        }
-        this.crs = options.crs;
-    }
-}
-/**
  * This interface describes parsing options.
  * @typedef {Object} ParsingOptions
  * @property {Source} in - data informations contained in the file.
@@ -99,13 +77,20 @@ let uid = 0;
  *  depending on the current fetched tile for example</li>
  * </ul>
  */
-class Source extends InformationsData {
+class Source {
     /**
      * @param {Object} source - An object that can contain all properties of a
      * Source. Only the `url` property is mandatory.
      */
     constructor(source) {
-        super(source);
+        if (source.projection) {
+            console.warn('Source projection parameter is deprecated, use crs instead.');
+            source.crs = source.crs || source.projection;
+        }
+        if (source.crs) {
+            CRS.isValid(source.crs);
+        }
+        this.crs = source.crs;
         this.isSource = true;
 
         if (!source.url) {

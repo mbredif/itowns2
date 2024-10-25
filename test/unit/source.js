@@ -20,27 +20,47 @@ import fileSource from '../data/filesource/featCollec_Polygone.geojson';
 const tileset = {};
 
 describe('Sources', function () {
-    const vendorSpecific = {
-        buffer: 4096,
-        format_options: 'dpi:300;quantizer:octree',
-        tiled: true,
-    };
-
     describe('Source', function () {
         const paramsSource = {
             url: 'http://',
         };
 
-        it('should instance and throw error for Source', function () {
-            const source = new Source(paramsSource);
-            assert.throws(source.urlFromExtent, Error);
-            assert.throws(source.extentInsideLimit, Error);
-        });
+        describe('Instancing of a Source', function () {
+            let source;
+            it('should throw an error for having no url', function () {
+                assert.throws(() => new Source({}), Error);
+            });
+            it('should succeed', function () {
+                source = new Source(paramsSource);
+                assert.ok(source.isSource);
+            });
+            it('testing deprecated options', function () {
+                paramsSource.projection = 'EPSG:4326';
+                const source = new Source(paramsSource);
+                assert.ok(source.isSource);
+                assert.equal(source.crs, paramsSource.projection);
+            });
 
-        it('should throw an error for having no url', function () {
-            assert.throws(() => new Source({}), Error);
+            it('testing abstract methods', function () {
+                assert.throws(source.urlFromExtent, Error);
+                assert.throws(source.extentInsideLimit, Error);
+            });
+
+            it("method 'onLayerRemoved'", function () {
+                const mockedCache = { get: () => {}, set: a => a, clear: () => {} };
+                const unusedCrs = 'unusedCrs';
+                source._featuresCaches[unusedCrs] = mockedCache;
+                source.onLayerRemoved({ unusedCrs });
+                assert.equal(source._featuresCaches[unusedCrs], undefined);
+            });
         });
     });
+
+    const vendorSpecific = {
+        buffer: 4096,
+        format_options: 'dpi:300;quantizer:octree',
+        tiled: true,
+    };
 
     describe('WFSSource', function () {
         const paramsWFS = {
