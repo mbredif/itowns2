@@ -1,6 +1,5 @@
 import Source from 'Source/Source';
 import Cache from 'Core/Scheduler/Cache';
-import CRS from 'Core/Geographic/Crs';
 
 /**
  * An object defining the source of a single resource to get from a direct
@@ -159,7 +158,7 @@ class FileSource extends Source {
         if (!features) {
             options.out.buildExtent = this.crs != 'EPSG:4978';
             if (options.out.buildExtent) {
-                options.out.forcedExtentCrs = options.out.crs != 'EPSG:4978' ? options.out.crs : CRS.formatToEPSG(this.crs);
+                options.out.forcedExtentCrs = options.out.crs != 'EPSG:4978' ? options.out.crs : this.crs;
             }
             features = this.parser(this.fetchedData, options);
             this._featuresCaches[options.out.crs].setByArray(features, [0]);

@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import { ELEVATION_MODES } from 'Renderer/LayeredMaterial';
 import { checkNodeElevationTextureValidity, insertSignificantValuesFromParent, computeMinMaxElevation } from 'Parser/XbilParser';
-import CRS from 'Core/Geographic/Crs';
 
 export const EMPTY_TEXTURE_ZOOM = -1;
 
@@ -32,7 +31,7 @@ class RasterTile extends THREE.EventDispatcher {
     constructor(material, layer) {
         super();
         this.layer = layer;
-        this.crs = layer.parent.tileMatrixSets.indexOf(CRS.formatToTms(layer.crs));
+        this.crs = layer.parent.tileMatrixSets.indexOf(layer.crs);
         if (this.crs == -1) {
             console.error('Unknown crs:', layer.crs);
         }

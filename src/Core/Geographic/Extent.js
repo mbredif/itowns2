@@ -1,6 +1,6 @@
 import * as THREE from 'three';
+import * as CRS from './Crs';
 import Coordinates from './Coordinates';
-import CRS from './Crs';
 
 /**
  * Extent is a SIG-area (so 2D)
@@ -47,10 +47,6 @@ class Extent {
     constructor(crs, v0, v1, v2, v3) {
         if (CRS.isGeocentric(crs)) {
             throw new Error(`${crs} is a geocentric projection, it doesn't make sense with a geographical extent`);
-        }
-
-        if (CRS.isTms(crs)) {
-            throw new Error(`${crs} is a tiled projection, use Tile instead`);
         }
 
         this.isExtent = true;
@@ -234,7 +230,7 @@ class Extent {
      */
     isInside(extent, epsilon) {
         extent.as(this.crs, _extent);
-        epsilon = epsilon == undefined ? CRS.reasonnableEpsilon(this.crs) : epsilon;
+        epsilon = epsilon ?? CRS.reasonableEpsilon(this.crs);
         return this.east - _extent.east <= epsilon &&
                 _extent.west - this.west <= epsilon &&
                 this.north - _extent.north <= epsilon &&

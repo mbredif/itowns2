@@ -1,8 +1,8 @@
 import * as THREE from 'three';
+import * as CRS from 'Core/Geographic/Crs';
 import TileGeometry from 'Core/TileGeometry';
 import BuilderEllipsoidTile from 'Core/Prefab/Globe/BuilderEllipsoidTile';
 import Coordinates from 'Core/Geographic/Coordinates';
-import CRS from 'Core/Geographic/Crs';
 
 // get oriented bounding box of tile
 const builder = new BuilderEllipsoidTile({ crs: 'EPSG:4978', uvCount: 1 });
@@ -126,7 +126,7 @@ class OBB extends THREE.Object3D {
             this.position.copy(position);
             this.quaternion.copy(quaternion);
             this.updateMatrixWorld(true);
-        } else if (!CRS.isTms(extent.crs) && CRS.isMetricUnit(extent.crs)) {
+        } else if (CRS.isMetricUnit(extent.crs)) {
             extent.center(coord).toVector3(this.position);
             extent.planarDimensions(dimension);
             size.set(dimension.x, dimension.y, Math.abs(maxHeight - minHeight));

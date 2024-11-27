@@ -8,7 +8,6 @@ import GlobeLayer from 'Core/Prefab/Globe/GlobeLayer';
 import Atmosphere from 'Core/Prefab/Globe/Atmosphere';
 import CameraUtils from 'Utils/CameraUtils';
 
-import CRS from 'Core/Geographic/Crs';
 import { ellipsoidSizes } from 'Core/Math/Ellipsoid';
 
 /**
@@ -138,11 +137,11 @@ class GlobeView extends View {
             return Promise.reject(new Error('Add Layer type object'));
         }
         if (layer.isColorLayer) {
-            if (!this.tileLayer.tileMatrixSets.includes(CRS.formatToTms(layer.source.crs))) {
+            if (!this.tileLayer.tileMatrixSets.includes(layer.source.crs)) {
                 return layer._reject(`Only ${this.tileLayer.tileMatrixSets} tileMatrixSet are currently supported for color layers`);
             }
         } else if (layer.isElevationLayer) {
-            if (CRS.formatToTms(layer.source.crs) !== this.tileLayer.tileMatrixSets[0]) {
+            if (layer.source.crs !== this.tileLayer.tileMatrixSets[0]) {
                 return layer._reject(`Only ${this.tileLayer.tileMatrixSets[0]} tileMatrixSet is currently supported for elevation layers`);
             }
         }

@@ -1,6 +1,5 @@
 import Source from 'Source/Source';
 import URLBuilder from 'Provider/URLBuilder';
-import CRS from 'Core/Geographic/Crs';
 import Extent from 'Core/Geographic/Extent';
 
 const _extent = new Extent('EPSG:4326', [0, 0, 0, 0]);
@@ -161,7 +160,7 @@ class WFSSource extends Source {
     }
 
     requestToKey(extent) {
-        if (CRS.isTms(extent.crs)) {
+        if (extent.isTile) {
             return super.requestToKey(extent);
         } else {
             return [extent.zoom, extent.south, extent.west];

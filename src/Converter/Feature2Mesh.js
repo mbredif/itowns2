@@ -4,7 +4,6 @@ import { FEATURE_TYPES } from 'Core/Feature';
 import ReferLayerProperties from 'Layer/ReferencingLayerProperties';
 import { deprecatedFeature2MeshOptions } from 'Core/Deprecated/Undeprecator';
 import Extent from 'Core/Geographic/Extent';
-import Crs from 'Core/Geographic/Crs';
 import OrientationUtils from 'Utils/OrientationUtils';
 import Coordinates from 'Core/Geographic/Coordinates';
 import Style, { StyleContext } from 'Core/Style';
@@ -64,7 +63,7 @@ class FeatureMesh extends THREE.Group {
             } else {
                 // calculate the scale transformation to transform the feature.extent
                 // to feature.extent.as(crs)
-                coord.crs = Crs.formatToEPSG(this.#originalCrs);
+                coord.crs = this.#originalCrs;
                 // TODO: An extent here could be either a geographic extent (for
                 // features from WFS) or a tiled extent (for features from MVT).
                 // Unify both behavior.
