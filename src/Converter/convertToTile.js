@@ -18,7 +18,7 @@ function setTileFromTiledLayer(tile, tileLayer) {
     }
 
     if (__DEBUG__) {
-        tile.material.showOutline = tileLayer.showOutline || false;
+        tile.material.setUniform('showOutline', tileLayer.showOutline || false);
     }
 
     if (tileLayer.isGlobeLayer) {
