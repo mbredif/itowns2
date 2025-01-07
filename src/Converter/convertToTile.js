@@ -78,7 +78,7 @@ export default {
                 tile.geoidHeight = parent.geoidHeight;
                 const geoidHeight = geoidLayerIsVisible(layer) ? tile.geoidHeight : 0;
                 tile.setBBoxZ({ min: parent.obb.z.min, max: parent.obb.z.max, geoidHeight });
-                tile.material.geoidHeight = geoidHeight;
+                tile.material.setUniform('geoidHeight', geoidHeight);
             }
 
             return tile;

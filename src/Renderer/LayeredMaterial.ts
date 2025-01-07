@@ -359,6 +359,8 @@ export class LayeredMaterial extends THREE.ShaderMaterial {
                 }
             },
         });
+
+        // setTimeout(() => console.log(this), 2);
     }
 
     public get mode(): number {
@@ -532,5 +534,17 @@ export class LayeredMaterial extends THREE.ShaderMaterial {
     public getLayer(id: string): RasterTile | undefined {
         return this.elevationTile?.id === id
             ? this.elevationTile : this.colorTiles.find(l => l.id === id);
+    }
+
+    public getLayers(ids: string[]): RasterTile[] {
+        // NOTE: this could instead be a mapping with an undefined in place of
+        // unfound IDs. Need to identify a use case for it though as it would
+        // probably have a performance cost (albeit minor in the grand scheme of
+        // things).
+        const res: RasterTile[] = this.colorTiles.filter(l => ids.includes(l.id));
+        if (this.elevationTile !== undefined && ids.includes(this.elevationTile?.id)) {
+            res.push(this.elevationTile);
+        }
+        return res;
     }
 }
