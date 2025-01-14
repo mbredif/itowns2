@@ -44,8 +44,8 @@ class GeoidLayer extends Layer {
     }
 
     updateNodeZ(node) {
-        node.material.geoidHeight = this.visible ? node.geoidHeight : 0;
-        node.obb.updateZ({ geoidHeight: node.material.geoidHeight });
+        node.material.setUniform('geoidHeight', this.visible ? node.geoidHeight : 0);
+        node.obb.updateZ({ geoidHeight: node.material.getUniform('geoidHeight') });
     }
 
     update(context, layer, node, parent) {
